@@ -1,0 +1,9 @@
+What happened: the first push of the new workflow (f26a6e3) failed at the typecheck step. app/layout.tsx uses
+  LayoutProps, a type Next generates into .next/types, and that folder doesn't exist on a fresh checkout. It never
+  showed up locally because I'd already run builds. I changed the typecheck script to next typegen && tsc --noEmit,
+  which generates the types first. I confirmed it works with .next deleted, then pushed the fix.
+
+  Remaining notes:
+  - Two earlier runs of the old template workflow failed. That's expected, and it's gone now.
+  - GitHub shows a non-blocking warning that actions/checkout@v4 and actions/setup-node@v4 run on a deprecated Node 20
+    runtime. It doesn't affect the result. Bumping those action versions later would clear it.
