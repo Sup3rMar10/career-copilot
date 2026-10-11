@@ -1,36 +1,31 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Career Copilot
 
-## Getting Started
+A Next.js app that uses Claude to compare your resume against a job posting. It scores your fit, rewrites your bullets, and preps you for the interview. You can then chat with follow-up questions such as "mock-interview me on the first gap".
 
-First, run the development server:
+## What it demonstrates
+
+- **PDF input with citations**: the resume goes to Claude as a base64 `document` block (or plain text) with `citations: { enabled: true }`. Cited claims show `[n]` markers and a Sources panel with the page number and quoted text.
+- **Streaming**: `client.beta.messages.stream` piped to the browser as NDJSON events (`text` and `cite`) through a `ReadableStream`.
+- **Prompt caching**: the documents sit at the start of the first user turn with a `cache_control` breakpoint, so follow-up turns read them from the cache.
+- **Adaptive thinking** with an explicit `effort` setting (`claude-opus-5-5`).
+- **Refusal fallbacks** via the server-side `fallbacks: "default"` parameter.
+- **Typed error handling** with the SDK's exception classes.
+
+## Run it
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local   # add your ANTHROPIC_API_KEY
+npm install
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Layout
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `app/api/coach/route.ts`: streaming Claude endpoint
+- `app/page.tsx`: UI (inputs, analysis, follow-up chat)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Ideas to extend it
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Use the Files API to upload the PDF once instead of resending it each turn
+- Save analyses per job and track applications
+- Add an eval set to measure the quality of the rewritten bullets
