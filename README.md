@@ -2,6 +2,10 @@
 
 A Next.js app that uses Claude to compare your resume against a job posting. It scores your fit, rewrites your bullets, and preps you for the interview. You can then chat with follow-up questions such as "mock-interview me on the first gap".
 
+## Screenshot
+
+![Career Copilot input screen: upload a PDF resume or paste text, paste a job description, then click Analyze my fit](docs/screenshot.png)
+
 ## What it demonstrates
 
 - **PDF input with citations**: the resume goes to Claude as a base64 `document` block (or plain text) with `citations: { enabled: true }`. Cited claims show `[n]` markers and a Sources panel with the page number and quoted text.
